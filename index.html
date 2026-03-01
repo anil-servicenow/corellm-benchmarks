@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreLLM Benchmarks</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        header {
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        header p {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        .grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+        .card {
+            background: #161616;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .card:hover {
+            border-color: #444;
+            background: #1a1a1a;
+        }
+        .card h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+        .card p {
+            font-size: 0.85rem;
+            color: #777;
+        }
+        .empty {
+            text-align: center;
+            color: #555;
+            grid-column: 1 / -1;
+            padding: 3rem 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CoreLLM Benchmarks</h1>
+        <p>Collection of LLM benchmark pages</p>
+    </header>
+    <div class="grid" id="pages">
+        <div class="empty"><p>Loading pages...</p></div>
+    </div>
+
+    <script>
+        const REPO = 'anil-servicenow/corellm-benchmarks';
+        const DIR = 'pages';
+
+        function toTitle(filename) {
+            return filename
+                .replace(/\.html$/i, '')
+                .replace(/[-_]/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        async function loadPages() {
+            const grid = document.getElementById('pages');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${DIR}`);
+                if (!res.ok) throw new Error(res.statusText);
+                const files = await res.json();
+                const htmlFiles = files
+                    .filter(f => f.type === 'file' && f.name.endsWith('.html'))
+                    .sort((a, b) => a.name.localeCompare(b.name));
+
+                if (htmlFiles.length === 0) {
+                    grid.innerHTML = '<div class="empty"><p>No pages yet.</p></div>';
+                    return;
+                }
+
+                grid.innerHTML = htmlFiles.map(f => `
+                    <a class="card" href="${DIR}/${f.name}">
+                        <h2>${toTitle(f.name)}</h2>
+                        <p>${f.name}</p>
+                    </a>
+                `).join('');
+            } catch (e) {
+                grid.innerHTML = '<div class="empty"><p>Could not load pages.</p></div>';
+            }
+        }
+
+        loadPages();
+    </script>
+</body>
+</html>

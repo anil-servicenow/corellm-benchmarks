@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benchmark Metric Definitions</title>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<style>
+  :root {
+    --blue-900: #1e3a5f;
+    --blue-700: #2563eb;
+    --blue-600: #3b82f6;
+    --blue-100: #dbeafe;
+    --blue-50: #eff6ff;
+    --green-700: #15803d;
+    --green-100: #dcfce7;
+    --green-50: #f0fdf4;
+    --orange-700: #c2410c;
+    --orange-100: #ffedd5;
+    --orange-50: #fff7ed;
+    --teal-700: #0f766e;
+    --teal-100: #ccfbf1;
+    --teal-50: #f0fdfa;
+    --gray-700: #374151;
+    --gray-500: #6b7280;
+    --gray-300: #d1d5db;
+    --gray-200: #e5e7eb;
+    --gray-100: #f3f4f6;
+    --gray-50: #f9fafb;
+    --purple-700: #7c3aed;
+    --purple-100: #ede9fe;
+    --purple-50: #f5f3ff;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #fff;
+    color: #1f2937;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 48px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    margin-bottom: 48px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--blue-900);
+    letter-spacing: -0.5px;
+  }
+  .page-header p {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-top: 6px;
+  }
+
+  /* ── Navigation ── */
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 40px;
+  }
+  .nav a {
+    display: inline-block;
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-700);
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+  .nav a:hover {
+    background: var(--blue-50);
+    border-color: var(--blue-600);
+    color: var(--blue-700);
+  }
+
+  /* ── Sections ── */
+  .section {
+    margin-bottom: 48px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .section-header .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-900);
+    letter-spacing: -0.3px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 20px;
+    padding-left: 22px;
+  }
+  .section-desc strong { color: var(--gray-700); }
+
+  .note-box {
+    background: var(--gray-50);
+    border-left: 3px solid var(--gray-300);
+    padding: 12px 16px;
+    margin: 16px 0 0 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 12.5px;
+    color: var(--gray-500);
+    line-height: 1.7;
+  }
+  .note-box strong { color: var(--gray-700); }
+
+  /* ── Card wrapper ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  /* ── DataTables overrides ── */
+  .dataTables_wrapper {
+    font-family: 'Inter', sans-serif;
+    padding: 0;
+  }
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate { display: none; }
+
+  table.dataTable {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  table.dataTable thead th {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--gray-200) !important;
+    white-space: nowrap;
+    background: var(--gray-50) !important;
+    color: var(--gray-500);
+  }
+  table.dataTable thead th:first-child { padding-left: 20px; }
+
+  table.dataTable tbody td {
+    font-size: 13px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--gray-100) !important;
+    vertical-align: top;
+    color: #374151;
+  }
+  table.dataTable tbody td:first-child {
+    padding-left: 20px;
+    font-weight: 500;
+    color: #1f2937;
+  }
+  table.dataTable tbody tr:last-child td { border-bottom: none !important; }
+  table.dataTable tbody tr:hover td { background: var(--blue-50) !important; }
+  table.dataTable.no-footer { border-bottom: none !important; }
+
+  /* Score range pills */
+  .range {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .range-pct { background: var(--blue-100); color: var(--blue-700); }
+  .range-binary { background: var(--green-100); color: var(--green-700); }
+  .range-scale { background: var(--orange-100); color: var(--orange-700); }
+  .range-float { background: var(--teal-100); color: var(--teal-700); }
+  .range-int { background: var(--purple-100); color: var(--purple-700); }
+
+  /* Category badges */
+  .cat-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    background: var(--gray-100);
+    color: var(--gray-700);
+  }
+
+  /* ── Two-column grid ── */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .grid-2 .sub-card {
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .sub-card-header {
+    padding: 14px 20px 6px;
+  }
+  .sub-card-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--blue-900);
+  }
+  .sub-card-header p {
+    font-size: 12px;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .container { padding: 24px 20px; }
+  }
+  @media print {
+    .nav { display: none; }
+    .container { padding: 20px; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="page-header">
+    <h1>Benchmark Metric Definitions</h1>
+    <p>Reference guide for all metrics used in the CLAE executive benchmark reports</p>
+  </div>
+
+  <div class="nav">
+    <a href="#platform">Platform</a>
+    <a href="#agent">Agent / Fulfiller</a>
+    <a href="#requestor">Requestor (Search QnA)</a>
+    <a href="#coding">Coding</a>
+    <a href="#misc">Miscellaneous</a>
+    <a href="#tokens">Token Metrics</a>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- PLATFORM BENCHMARKS                          -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section" id="platform">
+    <div class="section-header">
+      <div class="dot" style="background:var(--blue-700)"></div>
+      <h2>Platform Benchmarks</h2>
+    </div>
+    <div class="card">
+      <table id="tbl-platform" class="display" style="width:100%">
+        <thead>
+          <tr><th>Category</th><th>Metric</th><th>Score Range</th><th>Definition</th><th>Data Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="cat-badge">Agentic-2: No GT</span></td><td>Successful Workflows (Strict)</td><td><span class="range range-pct">0–100%</span></td><td>% of workflows completed correctly without GT. K=4 attempts, every step must be correct.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Agentic-2: No GT</span></td><td>Robustness</td><td><span class="range range-pct">0–100%</span></td><td>% of cases passed once but failed in other runs. Lower is better.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Voice (T2T)</span></td><td>Task Completion</td><td><span class="range range-binary">0/1 binary</span></td><td>1=fully completed, 0=any failure. Aggregated as %. 8 languages.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Voice (T2T)</span></td><td>Agent Detection</td><td><span class="range range-binary">0/1 binary</span></td><td>1=correct agent identified. Aggregated as %.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Voice (T2T)</span></td><td>Tool Selection</td><td><span class="range range-binary">0/1 binary</span></td><td>1=correct tool selected. Aggregated as %.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Voice (T2T)</span></td><td>Tool Execution Success</td><td><span class="range range-binary">0/1 binary</span></td><td>1=correct params, 0=incorrect/hallucinated. Aggregated as %.</td><td></td></tr>
+          <tr><td><span class="cat-badge">DocIntel</span></td><td>Correct</td><td><span class="range range-pct">0–100%</span></td><td>% of document intelligence questions answered correctly.</td><td></td></tr>
+          <tr><td><span class="cat-badge">React</span></td><td>Accuracy</td><td><span class="range range-pct">0–100%</span></td><td>% of ReAct (Reasoning + Acting) steps correct.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Action Planner-1</span></td><td>Non-Direct Response Accuracy</td><td><span class="range range-pct">0–100%</span></td><td>% correctly planning action vs. direct response.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Planner-2</span></td><td>Action F1 Score</td><td><span class="range range-pct">0–100%</span></td><td>F1 for predicted vs. expected actions.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Planner-2</span></td><td>KB F1 Score</td><td><span class="range range-pct">0–100%</span></td><td>F1 for KB article retrieval.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Japanese Fluency</span></td><td>Complete Sentences</td><td><span class="range range-pct">0–100%</span></td><td>% grammatically complete Japanese sentences.</td><td></td></tr>
+          <tr><td><span class="cat-badge">Japanese Fluency</span></td><td>Correct Name Address</td><td><span class="range range-pct">0–100%</span></td><td>% using correct full name + honorifics (-san, -sama).</td><td></td></tr>
+          <tr><td><span class="cat-badge">Japanese Fluency</span></td><td>Surname Address Only</td><td><span class="range range-pct">0–100%</span></td><td>% using surname-only address (formal convention).</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- AGENT / FULFILLER BENCHMARKS                 -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section" id="agent">
+    <div class="section-header">
+      <div class="dot" style="background:var(--green-700)"></div>
+      <h2>Agent / Fulfiller Benchmarks</h2>
+    </div>
+    <p class="section-desc">Applies to: <strong>Case Summarization</strong>, <strong>Chat Handoff</strong>, <strong>Chat Wrapup</strong>, <strong>KB Generation</strong>, <strong>Multi KB Generation</strong>, <strong>Resolution Notes</strong>. All share the same core judge metrics. Standard uses a 1–3 scale; strict uses a 1–5 scale.</p>
+    <div class="card">
+      <table id="tbl-agent" class="display" style="width:100%">
+        <thead>
+          <tr><th>Metric</th><th>Score Range</th><th>Definition</th><th>Notes</th><th>Data Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Faithfulness</td><td><span class="range range-scale">1–3 / 1–5</span></td><td>Output only includes source details, no hallucinations</td><td>Std: 1=major; 3=none. Strict: 1=unfaithful; 5=flawless.</td><td></td></tr>
+          <tr><td>Completeness</td><td><span class="range range-scale">1–3 / 1–5</span></td><td>Key details and relevant entities included</td><td>Std: 1=few; 3=all. Strict: 1=&lt;30%; 5=100%.</td><td></td></tr>
+          <tr><td>Instruction Following</td><td><span class="range range-scale">1–3 / 1–5</span></td><td>Adherence to required structured format</td><td>Std: 1=&gt;50% not followed; 3=all. Strict: 5=perfect.</td><td></td></tr>
+          <tr><td>Relevance</td><td><span class="range range-scale">1–5 per section</span></td><td>Content belongs in its assigned section</td><td>KB Gen, Res Notes.</td><td></td></tr>
+          <tr><td>Coherence</td><td><span class="range range-scale">1–5 per section</span></td><td>Logical flow and consistency within sections</td><td>KB Gen, Res Notes.</td><td></td></tr>
+          <tr><td>Conciseness</td><td><span class="range range-scale">1–5 per section</span></td><td>Brevity and focus of generated content</td><td>KB Gen.</td><td></td></tr>
+          <tr><td>Groundedness</td><td><span class="range range-scale">1–5 per section</span></td><td>All claims grounded in source details</td><td>KB Gen.</td><td></td></tr>
+          <tr><td>Language Correctness</td><td><span class="range range-binary">Binary</span></td><td>Output in expected target language</td><td>All. de, en, es, fq, fr, it, ja, nl, pb.</td><td></td></tr>
+          <tr><td>Valid JSON Format</td><td><span class="range range-binary">Binary</span></td><td>Output conforms to JSON spec</td><td>All.</td><td></td></tr>
+          <tr><td>Defect Rate</td><td><span class="range range-float">0.0–1.0</span></td><td>Rate of outputs with structural defects</td><td>Case Sum, Chat Handoff/Wrapup. Lower is better.</td><td></td></tr>
+          <tr><td>Copy-Paste Rate</td><td><span class="range range-float">0.0–1.0</span></td><td>Rate of verbatim source copying</td><td>Case Sum, Chat Handoff/Wrapup. Lower is better.</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note-box">
+      <strong>Multi KB Gen</strong> uses 1–3 scale (vs. 1–5) for merging child KBs into a parent article.<br>
+      <strong>Resolution Notes</strong> evaluates root_cause and resolution_steps separately, using hallucination (instead of faithfulness), completeness, relevance, and coherence.
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- REQUESTOR BENCHMARKS                         -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section" id="requestor">
+    <div class="section-header">
+      <div class="dot" style="background:var(--orange-700)"></div>
+      <h2>Requestor Benchmarks (Search QnA)</h2>
+    </div>
+    <div class="grid-2">
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <h3>Search QnA Synthesis</h3>
+          <p>Quality metrics evaluated only when model predicts "Direct Answer".</p>
+        </div>
+        <table id="tbl-synth" class="display" style="width:100%">
+          <thead>
+            <tr><th>Metric</th><th>Range</th><th>Definition</th><th>Data Source</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>User Experience Accuracy</td><td><span class="range range-float">0.0–1.0</span></td><td>Correct class + acceptable quality. Primary metric.</td><td></td></tr>
+            <tr><td>Classification Macro F1</td><td><span class="range range-float">0.0–1.0</span></td><td>Macro F1: DA, Clarification Q, No Answer.</td><td></td></tr>
+            <tr><td>DA Overall Quality</td><td><span class="range range-float">0.0–1.0</span></td><td>Aggregate across all DA rating dimensions.</td><td></td></tr>
+            <tr><td>Completeness Rating</td><td><span class="range range-float">0.0–1.0</span></td><td>DA covers all relevant KB info.</td><td></td></tr>
+            <tr><td>Faithfulness Rating</td><td><span class="range range-float">0.0–1.0</span></td><td>DA grounded in KB documents.</td><td></td></tr>
+            <tr><td>Conciseness Rating</td><td><span class="range range-float">0.0–1.0</span></td><td>DA appropriately brief.</td><td></td></tr>
+            <tr><td>Relevance Rating</td><td><span class="range range-float">0.0–1.0</span></td><td>DA relevant to user query.</td><td></td></tr>
+            <tr><td>Formattedness Rating</td><td><span class="range range-float">0.0–1.0</span></td><td>DA follows expected format.</td><td></td></tr>
+            <tr><td>Citation Rating</td><td><span class="range range-float">0.0–1.0</span></td><td>DA cites source KB documents.</td><td></td></tr>
+            <tr><td>Non-Self-Referential</td><td><span class="range range-float">0.0–1.0</span></td><td>No "As an AI..." language.</td><td></td></tr>
+            <tr><td>Invalid Format Rate</td><td><span class="range range-float">0.0–1.0</span></td><td>Parsing error rate. Lower is better.</td><td></td></tr>
+            <tr><td>Per-Class P / R / F1</td><td><span class="range range-float">0.0–1.0</span></td><td>Per type: DA, Clarification, No Answer.</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <h3>Search Router Classification</h3>
+          <p>Routes queries to handlers. Rewrite evaluated for "question_answering".</p>
+        </div>
+        <table id="tbl-router" class="display" style="width:100%">
+          <thead>
+            <tr><th>Metric</th><th>Range</th><th>Definition</th><th>Data Source</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Accuracy F1 Score</td><td><span class="range range-float">0.0–1.0</span></td><td>Overall F1 across router classes.</td><td></td></tr>
+            <tr><td>Macro Avg F1 / P / R</td><td><span class="range range-float">0.0–1.0</span></td><td>Equal weight: QA, small_talk_*, va, extraction_error.</td><td></td></tr>
+            <tr><td>Weighted Avg F1 / P / R</td><td><span class="range range-float">0.0–1.0</span></td><td>Weighted by class frequency.</td><td></td></tr>
+            <tr><td>Per-Class F1 / P / R</td><td><span class="range range-float">0.0–1.0</span></td><td>6 route types.</td><td></td></tr>
+            <tr><td>Good Rewrite Rate</td><td><span class="range range-float">0.0–1.0</span></td><td>LLM-judged rewrite quality for QA.</td><td></td></tr>
+            <tr><td>Valid JSON Rate</td><td><span class="range range-float">0.0–1.0</span></td><td>Parseable JSON output.</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- CODING BENCHMARKS                            -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section" id="coding">
+    <div class="section-header">
+      <div class="dot" style="background:var(--teal-700)"></div>
+      <h2>Coding Benchmarks</h2>
+    </div>
+
+    <div class="grid-2">
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <h3>Code Edit</h3>
+          <p>Modify JS code (Glide/SN APIs) per instruction. Variants: SN JS Full, Partial, Generic.</p>
+        </div>
+        <table class="display dt-sub" style="width:100%">
+          <thead><tr><th>Metric</th><th>Range</th><th>Definition</th><th>Data Source</th></tr></thead>
+          <tbody>
+            <tr><td>Code Edit Score</td><td><span class="range range-pct">0–100%</span></td><td>% rated &gt;7 by LLM judge (1–10 scale).</td><td></td></tr>
+            <tr><td>Valid JSON Format</td><td><span class="range range-binary">Binary</span></td><td>Parseable output.</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <h3>Text2Flow</h3>
+          <p>Create/modify SN flows from text. Sub-tasks: Create, Add Steps, Populate Inputs, etc.</p>
+        </div>
+        <table class="display dt-sub" style="width:100%">
+          <thead><tr><th>Metric</th><th>Range</th><th>Definition</th><th>Data Source</th></tr></thead>
+          <tbody>
+            <tr><td>Tree Similarity (w/ inputs)</td><td><span class="range range-float">0.0–1.0</span></td><td>Flow structure match incl. inputs.</td><td></td></tr>
+            <tr><td>Tree Similarity (no inputs)</td><td><span class="range range-float">0.0–1.0</span></td><td>Structure + action types only.</td><td></td></tr>
+            <tr><td>Trigger Similarity</td><td><span class="range range-float">0.0–1.0</span></td><td>Trigger type/config match.</td><td></td></tr>
+            <tr><td>Flow Update Similarity</td><td><span class="range range-float">0.0–1.0</span></td><td>Normalized improvement after adding steps.</td><td></td></tr>
+            <tr><td>Tree Input Similarity</td><td><span class="range range-float">0.0–1.0</span></td><td>Input parameter value accuracy.</td><td></td></tr>
+            <tr><td>Valid JSON</td><td><span class="range range-float">0.0–1.0</span></td><td>Parseable flow definitions.</td><td></td></tr>
+            <tr><td>Valid JSON Schema</td><td><span class="range range-float">0.0–1.0</span></td><td>Matches required flow schema.</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px">
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <h3>AutoComplete</h3>
+          <p>Code completion given context. Variants: Full, DEVSNC, SURF, Intent SURF, Platform.</p>
+        </div>
+        <table class="display dt-sub" style="width:100%">
+          <thead><tr><th>Metric</th><th>Range</th><th>Definition</th><th>Data Source</th></tr></thead>
+          <tbody>
+            <tr><td>Score (near_correct0)</td><td><span class="range range-pct">0–100%</span></td><td>Exact correct only (strict).</td><td></td></tr>
+            <tr><td>Score (near_correct1)</td><td><span class="range range-pct">0–100%</span></td><td>Correct + near-correct.</td><td></td></tr>
+            <tr><td>Completion Empty Rate</td><td><span class="range range-pct">0–100%</span></td><td>No code generated. Lower is better.</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <h3>TCEval (SN Code Evaluation)</h3>
+          <p>SN code gen eval. Sub-tasks: Text2Code, Autocomplete, FIM.</p>
+        </div>
+        <table class="display dt-sub" style="width:100%">
+          <thead><tr><th>Metric</th><th>Range</th><th>Definition</th><th>Data Source</th></tr></thead>
+          <tbody>
+            <tr><td>pass@1</td><td><span class="range range-float">0.0–1.0</span></td><td>Code passes all tests, first attempt.</td><td></td></tr>
+            <tr><td>pass@1 (snow)</td><td><span class="range range-float">0.0–1.0</span></td><td>SN/Glide API problems.</td><td></td></tr>
+            <tr><td>pass@1 (generic)</td><td><span class="range range-float">0.0–1.0</span></td><td>Non-SN problems.</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:24px">
+      <div class="sub-card">
+        <div class="sub-card-header">
+          <h3>Code Explain</h3>
+          <p>Explain JavaScript code: APIs, tables, code flow.</p>
+        </div>
+        <table class="display dt-sub" style="width:100%">
+          <thead><tr><th>Metric</th><th>Range</th><th>Definition</th><th>Data Source</th></tr></thead>
+          <tbody>
+            <tr><td>Hallucination Score</td><td><span class="range range-scale">1–10</span></td><td>1=severe hallucinations; 10=none.</td><td></td></tr>
+            <tr><td>Completeness Score</td><td><span class="range range-scale">1–10</span></td><td>1=incomplete; 10=fully complete.</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- MISCELLANEOUS                                -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section" id="misc">
+    <div class="section-header">
+      <div class="dot" style="background:var(--gray-500)"></div>
+      <h2>Miscellaneous Benchmarks</h2>
+    </div>
+    <div class="card">
+      <table id="tbl-misc" class="display" style="width:100%">
+        <thead>
+          <tr><th>Category</th><th>Metric</th><th>Score Range</th><th>Definition</th><th>Data Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="cat-badge">VA KB Eval</span></td><td>Completeness</td><td><span class="range range-scale">1–5</span></td><td>KB info coverage. Sub-dims: concept, entity, procedural steps.</td><td></td></tr>
+          <tr><td><span class="cat-badge">VA KB Eval</span></td><td>KB Independence</td><td><span class="range range-scale">1–5</span></td><td>Response stands alone. 1=dependent; 5=self-contained.</td><td></td></tr>
+          <tr><td><span class="cat-badge">VA KB Eval</span></td><td>Faithfulness</td><td><span class="range range-scale">1–5</span></td><td>Accuracy vs. KB source. Sub-dims: groundedness, technical accuracy.</td><td></td></tr>
+          <tr><td><span class="cat-badge">VA KB Eval</span></td><td>Conciseness</td><td><span class="range range-scale">1–5</span></td><td>Brevity/density. Sub-dims: repetition, length, density.</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════ -->
+  <!-- TOKEN METRICS                                -->
+  <!-- ════════════════════════════════════════════ -->
+  <div class="section" id="tokens">
+    <div class="section-header">
+      <div class="dot" style="background:var(--purple-700)"></div>
+      <h2>Token Metrics (Across All Benchmarks)</h2>
+    </div>
+    <div class="card">
+      <table id="tbl-tokens" class="display" style="width:100%">
+        <thead>
+          <tr><th>Metric</th><th>Score Range</th><th>Definition</th><th>Data Source</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Avg Output Tokens</td><td><span class="range range-int">Integer</span></td><td>Total tokens per response (reasoning + completion). Verbosity/cost indicator.</td><td></td></tr>
+          <tr><td>Avg Reasoning Tokens</td><td><span class="range range-int">Integer</span></td><td>Chain-of-thought tokens. Thinking-enabled models only.</td><td></td></tr>
+          <tr><td>Avg Completion Tokens</td><td><span class="range range-int">Integer</span></td><td>Final user-facing answer tokens.</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+$(document).ready(function() {
+  var opts = {
+    paging: false,
+    searching: false,
+    info: false,
+    ordering: false,
+    autoWidth: false
+  };
+  $('#tbl-platform').DataTable(opts);
+  $('#tbl-agent').DataTable(opts);
+  $('#tbl-synth').DataTable(opts);
+  $('#tbl-router').DataTable(opts);
+  $('#tbl-misc').DataTable(opts);
+  $('#tbl-tokens').DataTable(opts);
+  $('.dt-sub').DataTable(opts);
+
+  // Smooth scroll for nav
+  $('.nav a').on('click', function(e) {
+    e.preventDefault();
+    var target = $(this).attr('href');
+    $('html, body').animate({ scrollTop: $(target).offset().top - 20 }, 300);
+  });
+});
+</script>
+
+</body>
+</html>
